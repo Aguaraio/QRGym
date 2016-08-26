@@ -14,11 +14,10 @@ class App extends Component{
 
       if (route.name === 'Login') {
 
-        let User  = realm.objects('User');
-        let isDone = User.filtered('done = true');
+        let isDone  = realm.objects('User').filtered('done = true');
 
         if(isDone.length == 0){
-          
+
           return <Login navigator={navigator} {...route.passProps} />
         }else{
 

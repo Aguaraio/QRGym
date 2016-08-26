@@ -9,6 +9,10 @@ import {
   Modal
 } from 'react-native'
 import Switcher from './Switcher';
+import BulkingModel from './../Realm/User';
+var viewGif = '';
+var viewWeight = '';
+var viewRepeat = '';
 
 class ViewImage extends Component {
   constructor(props) {
@@ -18,19 +22,44 @@ class ViewImage extends Component {
     source: React.propTypes.string
   }
 
+  _RealmModel(){
+    //Borramos todos los registros
+    let AllBulking = BulkingModel.objects('Bulking');
+    BulkingModel.write(() => {
+      BulkingModel.delete(AllBulking);
+    });
+
+    let NewBulking;
+    //Creamos uno nuevo
+    BulkingModel.write(() => {
+      NewBulking = BulkingModel.create('Bulking', {
+        id:1,
+        gifString: 'curvy-bench-press',
+        weight: '50 k',
+        repeat: '10 minutos'
+      })
+    });
+    viewGif = NewBulking.gifString;
+    viewWeight = NewBulking.weight;
+    viewRepeat = NewBulking.repeat;
+  }
+
   render () {
+
+    this._RealmModel();
+
     return (
       <View style={styles.container}  >
 
         <View style={styles.gif}   >
-          <Switcher source={this.props.source}>
+          <Switcher source={viewGif}>
           </Switcher>
         </View>
         <View style={styles.details}>
           <Image source={require('./../img/Icon-Workout.png')} style={{width: 100, height: 100}}/>
-          <Text>    40 kg             </Text>
+          <Text>    {viewWeight}          </Text>
           <Image source={require('./../img/stopwach.png')} style={{width: 100, height: 100}}/>
-          <Text>    5 hs</Text>
+          <Text>   {viewRepeat}   </Text>
         </View>
         <View style={styles.statusBar}>
           <TouchableHighlight  style={styles.statusBar}  underlayColor='transparent' onPress={this.props.closeModal.bind(this)}  >

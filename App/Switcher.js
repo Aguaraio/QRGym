@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Image, View, Text, Dimensions,TouchableHighlight,StyleSheet,Modal} from 'react-native';
+//import BulkingModel from './../Realm/Bulking';
 let windowWidth = Dimensions.get('window').width
 let windowHeight = Dimensions.get('window').height
 var ReturnedStr = '';
@@ -22,7 +23,7 @@ class Switcher extends Component{
       case 'cable-bicep-exercises':
             ReturnedStr = require('./../img/cable-bicep-exercises.gif');
         break;
-      case 'curvy':
+      case 'curvy-bench-press':
           ReturnedStr = require('./../img/curvy-bench-press.gif');
         break;
       case 'curvy-leg-curls':

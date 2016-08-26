@@ -53,9 +53,9 @@ class BarcodeScannerApp extends Component {
     this.props.navigator.pop();
   }
 
-  barcodeReceived(e) {
-    if (e.data !== qrString && e.type == this.state.camera.barCodeType && sendCode )
-    {
+  barcodeReceived() {
+    //if (e.data !== qrString && e.type == this.state.camera.barCodeType && sendCode )
+    //{
 
       Vibration.vibrate();
 
@@ -64,11 +64,11 @@ class BarcodeScannerApp extends Component {
             passProps: {
               closeModal: this._closeModal,
               gotoFBbutton : this._gotoFBbutton,
-              source:e.data
+              //source:e.data
             }
           });
-      qrString = e.data;
-    }
+      //qrString = e.data;
+    //}
   }
 
   _sendCodeIn(){
@@ -85,7 +85,7 @@ class BarcodeScannerApp extends Component {
               this.camera = cam;
             }}
             style={{flex:1}}
-            onBarCodeRead={this.barcodeReceived.bind(this)}
+
             torchMode={this.state.torchMode}
             cameraType={this.state.cameraType}
             viewFinderHeight={this.state.viewFinderHeight}
@@ -94,7 +94,7 @@ class BarcodeScannerApp extends Component {
             <View style={styles.statusBar}>
               <TouchableHighlight style={styles.button}
                 underlayColor='transparent'
-                onLongPress={this._sendCodeIn.bind(this)}
+                onLongPress={this.barcodeReceived.bind(this)}
                 onPressOut={this._sendCodeOut.bind(this)}>
                   <Image source={require('./../img/SnapButton.png')}/>
               </TouchableHighlight>
