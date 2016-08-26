@@ -13,7 +13,11 @@ const Realm = require('realm');
 const FBSDK = require('react-native-fbsdk');
 const {
   LoginButton,
+  GraphRequest,
+  GraphRequestManager,
+  AccessToken,
 } = FBSDK;
+
 
 
 class Login extends Component{
@@ -30,8 +34,6 @@ class Login extends Component{
           name: 'Login',                                                        //solo BarcodeScanner, si se desea especificar ios o android tendremos que crear LoginIOS y LoginAndroid
     })
   };
-
-
 
   _UserIN(){
     realm.write(()=>{
@@ -52,6 +54,37 @@ class Login extends Component{
 
   }
 
+  _responseInfoCallback(error: ?Object, result: ?Object) {
+  if (error) {
+    alert('Error fetching data: ' + error.toString());
+  } else {
+    alert('Success fetching data: ' + result.toString());
+    console.log(Object.keys(result));
+    var resultJSON = JSON.stringify(result);
+    console.log(resultJSON);
+    console.log('Entro a responseInfoCallback');
+  }
+}
+
+_testGraphAPI(){
+  const infoRequest = new GraphRequest(
+    '/me',
+    {
+      parameters: {
+                fields: {
+                  //string: 'email,name,first_name,middle_name,last_name' // what you want to get
+                  string: 'id,first_name,last_name,name,picture.type(large),email,gender'
+
+                },
+                access_token: {
+                  string: AccessToken.toString() // put your accessToken here
+                }
+              }
+    },
+    this._responseInfoCallback,
+  );
+  new GraphRequestManager().addRequest(infoRequest).start();
+}
 
 
   _renderLogin(){
@@ -60,13 +93,22 @@ class Login extends Component{
         <View>
           <LoginButton
             style={styles.Button}
-            publishPermissions={["publish_actions"]}
             onLoginFinished={(error, result) => {
               try {
                 if (result.grantedPermissions) {
 
                     this._UserIN();
-                    this._MoveModal();
+                    //this._MoveModal();
+
+                    AccessToken.getCurrentAccessToken().then(
+                      (data) => {
+                        AccessToken = data.accessToken
+                        alert(AccessToken.toString())
+
+                      }
+                    );
+
+                    this._testGraphAPI();
 
 
                 } else if (result.isCancelled){
