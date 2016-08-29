@@ -35,8 +35,8 @@ class ViewImage extends Component {
       NewBulking = BulkingModel.create('Bulking', {
         id:1,
         gifString: 'curvy-bench-press',
-        weight: '50 k',
-        repeat: '10 minutos'
+        weight: '150 k',
+        repeat: '30 minutos'
       })
     });
     viewGif = NewBulking.gifString;
@@ -57,9 +57,9 @@ class ViewImage extends Component {
         </View>
         <View style={styles.details}>
           <Image source={require('./../img/Icon-Workout.png')} style={{width: 100, height: 100}}/>
-          <Text>    {viewWeight}          </Text>
+          <Text>  {viewWeight}        </Text>
           <Image source={require('./../img/stopwach.png')} style={{width: 100, height: 100}}/>
-          <Text>   {viewRepeat}   </Text>
+          <Text>  {viewRepeat}  </Text>
         </View>
         <View style={styles.statusBar}>
           <TouchableHighlight  style={styles.statusBar}  underlayColor='transparent' onPress={this.props.closeModal.bind(this)}  >

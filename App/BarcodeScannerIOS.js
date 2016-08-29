@@ -13,12 +13,11 @@ import {
 import Camera from 'react-native-camera';
 import ViewImage from './ViewImage';
 import realm from './../Realm/User';
-//import TimerMixing from 'react-timer-mixin';
 
 let windowHeight = Dimensions.get('window').height
-
 var qrString = '';
 var sendCode = false;
+
 class BarcodeScannerApp extends Component {
 
   constructor(props) {
@@ -26,6 +25,7 @@ class BarcodeScannerApp extends Component {
     this.camera = null;
     this.state = {
       camera: {
+
         aspect: Camera.constants.Aspect.fill,
         captureTarget: Camera.constants.CaptureTarget.temp,
         type: Camera.constants.Type.back,
@@ -54,21 +54,21 @@ class BarcodeScannerApp extends Component {
   }
 
   barcodeReceived() {
-    //if (e.data !== qrString && e.type == this.state.camera.barCodeType && sendCode )
-    //{
+  //  if (e.data !== qrString && e.type == this.state.camera.barCodeType && sendCode )
+  //  {
 
-      Vibration.vibrate();
+//    Vibration.vibrate();
 
       this.props.navigator.push({
             name: 'ViewImage',
             passProps: {
               closeModal: this._closeModal,
               gotoFBbutton : this._gotoFBbutton,
-              //source:e.data
+        //      source:e.data
             }
           });
-      //qrString = e.data;
-    //}
+    //  qrString = e.data;
+  //  }
   }
 
   _sendCodeIn(){

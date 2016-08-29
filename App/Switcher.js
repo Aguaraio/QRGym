@@ -10,6 +10,7 @@ class Switcher extends Component{
     this.state={modalVisible:false,
                 transparent: true};
   }
+  
   propTypes:{
     source: React.propTypes.string
   }

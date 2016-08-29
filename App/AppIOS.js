@@ -4,7 +4,7 @@ import BarcodeScannerIOS from './BarcodeScannerIOS';
 import ViewImage from './ViewImage';
 import Login from './../Login';
 import realm from './../Realm/User';
-//const FBSDK = require('react-native-fbsdk');
+
 class App extends Component{
   constructor(props){
     super(props);

@@ -25,4 +25,32 @@ Bulking.schema = {
     },
 };
 
-export default new Realm({schema: [User, Bulking]});
+
+class FBUser extends Realm.Object {}
+FBUser.schema = {
+  name: 'FBUser',
+  primaryKey: 'id',
+  properties: {
+    id: {type: 'int', default: 1},
+    iduser: {type: 'string'},
+    name: {type: 'string', optional:true},
+    gender: {type: 'string', optional:true},
+    picture: {type: 'string', optional:true},
+    email: {type: 'string', optional:true},
+    birthday: {type: 'string', optional:true}
+
+  }
+};
+
+class UserPrueba extends Realm.Object {}
+UserPrueba.schema = {
+  name: 'UserPrueba',
+  primaryKey: 'id',
+  properties: {
+    id: {type: 'int', default: 1},
+    iduser: {type: 'string'},
+    name: {type: 'string', optional:true}
+
+  }
+};
+export default new Realm({schema: [User, Bulking, FBUser, UserPrueba]});

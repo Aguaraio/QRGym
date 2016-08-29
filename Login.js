@@ -9,6 +9,7 @@ import {
 //import Realm from 'realm';
 import BarcodeScannerIOS from './App/BarcodeScannerIOS';
 import realm from './Realm/User';
+//import realm from './Realm/UserFB';
 const Realm = require('realm');
 const FBSDK = require('react-native-fbsdk');
 const {
@@ -16,9 +17,13 @@ const {
   GraphRequest,
   GraphRequestManager,
   AccessToken,
+  LoginManager
 } = FBSDK;
-
-
+var userId = '';
+var userName = '';
+var userGender;
+var userEmail;
+var userBirthday;
 
 class Login extends Component{
   constructor(props){
@@ -31,7 +36,7 @@ class Login extends Component{
   _MoveModal(){
 
     this.props.navigator.resetTo({
-          name: 'Login',                                                        //solo BarcodeScanner, si se desea especificar ios o android tendremos que crear LoginIOS y LoginAndroid
+          name: 'Login',                                                     //solo BarcodeScanner, si se desea especificar ios o android tendremos que crear LoginIOS y LoginAndroid
     })
   };
 
@@ -42,6 +47,8 @@ class Login extends Component{
         done: true
       }, true);
     });
+
+
   }
 
   _UserOUT(){
@@ -54,38 +61,36 @@ class Login extends Component{
 
   }
 
-  _responseInfoCallback(error: ?Object, result: ?Object) {
-  if (error) {
-    alert('Error fetching data: ' + error.toString());
-  } else {
-    alert('Success fetching data: ' + result.toString());
-    console.log(Object.keys(result));
-    var resultJSON = JSON.stringify(result);
-    console.log(resultJSON);
-    console.log('Entro a responseInfoCallback');
-  }
+_saveUserFB(iduser, name, gender, email, birthday){
+  console.log(iduser)
+  console.log(name)
+  console.log(gender)
+  console.log(email)
+  console.log(birthday)
+
+  realm.write(()=>{
+    realm.create('FBUser',{
+      id: 1,
+      iduser: iduser,
+      name: name,
+      gender: gender,
+      email: email,
+      birthday: birthday
+    }, true);
+  })
 }
 
-_testGraphAPI(){
-  const infoRequest = new GraphRequest(
-    '/me',
-    {
-      parameters: {
-                fields: {
-                  //string: 'email,name,first_name,middle_name,last_name' // what you want to get
-                  string: 'id,first_name,last_name,name,picture.type(large),email,gender'
-
-                },
-                access_token: {
-                  string: AccessToken.toString() // put your accessToken here
-                }
-              }
-    },
-    this._responseInfoCallback,
-  );
-  new GraphRequestManager().addRequest(infoRequest).start();
+initUser(token) {
+  fetch('https://graph.facebook.com/v2.7/me?fields=id,name,gender,email,birthday&access_token=' + token)
+  .then((response) => response.json())
+  .then((json) => {
+    this._saveUserFB(JSON.stringify(json.id),JSON.stringify(json.name),JSON.stringify(json.gender),JSON.stringify(json.email),JSON.stringify(json.birthday))
+  })
+  .catch(() => {
+    console.log('ERROR GETTING DATA FROM FACEBOOK');
+    //reject('ERROR GETTING DATA FROM FACEBOOK')
+  })
 }
-
 
   _renderLogin(){
 
@@ -102,13 +107,12 @@ _testGraphAPI(){
 
                     AccessToken.getCurrentAccessToken().then(
                       (data) => {
-                        AccessToken = data.accessToken
-                        alert(AccessToken.toString())
-
+                        const {accessToken} = data
+                        this.initUser(accessToken)
                       }
                     );
 
-                    this._testGraphAPI();
+
 
 
                 } else if (result.isCancelled){
@@ -120,6 +124,7 @@ _testGraphAPI(){
               }
             }
           }
+
           onLogoutFinished={() => {
 
               alert("User logged out");
@@ -128,11 +133,13 @@ _testGraphAPI(){
           }/>
         </View>
       );
+      this._saveUserFB(userId, userName);
   }
 
   render() {
     return(
     this._renderLogin()
+
   );
   }
 };
