@@ -62,12 +62,10 @@ class ViewImage extends Component {
           <Text>  {viewRepeat}  </Text>
         </View>
         <View style={styles.statusBar}>
-          <TouchableHighlight  style={styles.statusBar}  underlayColor='transparent' onPress={this.props.closeModal.bind(this)}  >
+          <TouchableHighlight  style={styles.statusBar}  underlayColor='transparent'  >
             <Image source={require('./../img/BackButton.png')}/>
           </TouchableHighlight>
-          <TouchableHighlight  style={styles.statusBarVolver}  underlayColor='transparent' onPress={this.props.gotoFBbutton.bind(this)}  >
-            <Image source={require('./../img/BackButton.png')}/>
-          </TouchableHighlight>
+        
         </View>
       </View>
 		);

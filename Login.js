@@ -6,10 +6,8 @@ import {
   View,
   Navigator
 } from 'react-native';
-//import Realm from 'realm';
 import BarcodeScannerIOS from './App/BarcodeScannerIOS';
 import realm from './Realm/User';
-//import realm from './Realm/UserFB';
 const Realm = require('realm');
 const FBSDK = require('react-native-fbsdk');
 const {
@@ -24,21 +22,37 @@ var userName = '';
 var userGender;
 var userEmail;
 var userBirthday;
+var userPicture = '';
 
 class Login extends Component{
   constructor(props){
     super(props);
   }
   propTypes:{
-    passDone: React.propTypes.string
+    passDone: React.propTypes.string,
+    onPressFB: React.propTypes.func,
+    fbButton: React.propTypes.func
   }
 
-  _MoveModal(){
+  
 
-    this.props.navigator.resetTo({
-          name: 'Login',                                                     //solo BarcodeScanner, si se desea especificar ios o android tendremos que crear LoginIOS y LoginAndroid
-    })
-  };
+
+  //_MoveModal(){
+
+  //  this.props.navigator.resetTo({
+  //        name: 'Login',
+
+    //})
+  //};
+
+
+
+  //_MoveModalParent(){
+
+    //super.props.navigator.resetTo({
+    //      name: 'Login',
+    //})
+  //};
 
   _UserIN(){
     realm.write(()=>{
@@ -47,8 +61,6 @@ class Login extends Component{
         done: true
       }, true);
     });
-
-
   }
 
   _UserOUT(){
@@ -61,19 +73,14 @@ class Login extends Component{
 
   }
 
-_saveUserFB(iduser, name, gender, email, birthday){
-  console.log(iduser)
-  console.log(name)
-  console.log(gender)
-  console.log(email)
-  console.log(birthday)
-
+_saveUserFB(iduser, name, gender, email, birthday, picture){
   realm.write(()=>{
     realm.create('FBUser',{
       id: 1,
       iduser: iduser,
       name: name,
       gender: gender,
+      picture: picture,
       email: email,
       birthday: birthday
     }, true);
@@ -81,10 +88,11 @@ _saveUserFB(iduser, name, gender, email, birthday){
 }
 
 initUser(token) {
-  fetch('https://graph.facebook.com/v2.7/me?fields=id,name,gender,email,birthday&access_token=' + token)
+  fetch('https://graph.facebook.com/v2.7/me?fields=id,name,gender,email,birthday,picture.type(large)&access_token=' + token)
   .then((response) => response.json())
   .then((json) => {
-    this._saveUserFB(JSON.stringify(json.id),JSON.stringify(json.name),JSON.stringify(json.gender),JSON.stringify(json.email),JSON.stringify(json.birthday))
+
+    this._saveUserFB(JSON.stringify(json.id),JSON.stringify(json.name),JSON.stringify(json.gender),JSON.stringify(json.email),JSON.stringify(json.birthday), JSON.stringify(json.picture.data.url))
   })
   .catch(() => {
     console.log('ERROR GETTING DATA FROM FACEBOOK');
@@ -95,15 +103,13 @@ initUser(token) {
   _renderLogin(){
 
       return (
-        <View>
+        <View >
           <LoginButton
-            style={styles.Button}
             onLoginFinished={(error, result) => {
               try {
                 if (result.grantedPermissions) {
 
                     this._UserIN();
-                    //this._MoveModal();
 
                     AccessToken.getCurrentAccessToken().then(
                       (data) => {
@@ -112,8 +118,11 @@ initUser(token) {
                       }
                     );
 
+                    console.log('estoy arriba de onpressfb');
 
+                    this.props.onPressFB(false);
 
+                    console.log('estoy debajo de onpressfb');
 
                 } else if (result.isCancelled){
                   alert("Login was cancelled");
@@ -129,6 +138,15 @@ initUser(token) {
 
               alert("User logged out");
               this._UserOUT();
+
+              console.log('arriba gotobarcode');
+
+              this.props.fbButton();
+
+              //this.props.onPressFB(true);
+            //  {ref={BarcodeScannerIOS => this.setModal(true) = BarcodeScannerIOS}};
+
+              console.log('abajo gotobarcode');
             }
           }/>
         </View>
@@ -145,10 +163,11 @@ initUser(token) {
 };
 const styles = StyleSheet.create({
   Button: {
-    marginTop:300,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+      marginTop:300,
+      height: 50,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+
   });
 export default Login;

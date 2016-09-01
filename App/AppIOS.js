@@ -3,34 +3,24 @@ import {View, Navigator, Text} from 'react-native';
 import BarcodeScannerIOS from './BarcodeScannerIOS';
 import ViewImage from './ViewImage';
 import Login from './../Login';
+import UserProfile from './UserProfile';
+import TabBar from './TabBar';
 import realm from './../Realm/User';
 
 class App extends Component{
-  constructor(props){
-    super(props);
-  }
 
   renderScene (route, navigator) {
 
       if (route.name === 'Login') {
-
         let isDone  = realm.objects('User').filtered('done = true');
-
         if(isDone.length == 0){
-
           return <Login navigator={navigator} {...route.passProps} />
         }else{
-
-          return <BarcodeScannerIOS navigator={navigator} {...route.passProps} />
+          return <TabBar navigator={navigator} {...route.passProps} />
         }
-
-
       }
-      if (route.name === 'BarcodeScanner') {
-        return <BarcodeScannerIOS navigator={navigator} {...route.passProps} />
-      }
-      if (route.name === 'ViewImage') {
-        return <ViewImage navigator={navigator} {...route.passProps} />
+      if (route.name === 'TabBar') {
+        return <TabBar navigator={navigator} {...route.passProps}/>
       }
     }
 
@@ -43,7 +33,7 @@ class App extends Component{
         <Navigator
           configureScene={this.configureScene.bind(this)}
           style={{ flex: 1, backgroundColor: 'white' }}
-          initialRoute={{ name: 'Login' }}
+          initialRoute={{ name: 'TabBar' }}
           renderScene={this.renderScene.bind(this)} />
       );
     }

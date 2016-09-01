@@ -1,20 +1,23 @@
 import React, { Component } from 'react';
 import {
-  Modal,
   StyleSheet,
   Text,
   Vibration,
   View,
   TouchableHighlight,
   Image,
-  Dimensions
+  Dimensions,
+  TabBarIOS
 } from 'react-native';
 //import {Actions} from 'react-native-router-flux';
 import Camera from 'react-native-camera';
 import ViewImage from './ViewImage';
 import realm from './../Realm/User';
+import Login from './../Login';
+import Modal from './Modal';
 
-let windowHeight = Dimensions.get('window').height
+let windowHeight = Dimensions.get('window').height;
+let windowWidth = Dimensions.get('window').width;
 var qrString = '';
 var sendCode = false;
 
@@ -35,23 +38,30 @@ class BarcodeScannerApp extends Component {
       },
       barcode:''
     };
+    //this.setModal = this.setModal.bind(this);
   }
 
-  _closeModal(){
-    this.props.navigator.pop(); //REVISAR BIEN ACá
-    qrString = '';
+  setModal(visible){
+    this._showModal.setNativeProps({modalVisible:visible})
   }
 
-  _gotoFBbutton(){
-    realm.write(()=>{
-      realm.create('User',{
-        id: 1,
-        done: false
-      }, true);
-    });
 
-    this.props.navigator.pop();
-  }
+
+  //_closeModal(){
+  //  this.props.navigator.pop(); //REVISAR BIEN ACá
+  //  qrString = '';
+  //}
+
+  //_gotoFBbutton(){
+  //  realm.write(()=>{
+  //    realm.create('User',{
+  //      id: 1,
+  //      done: false
+  //    }, true);
+  //  });
+
+  //  this.props.navigator.pop();
+  //}
 
   barcodeReceived() {
   //  if (e.data !== qrString && e.type == this.state.camera.barCodeType && sendCode )
@@ -78,6 +88,7 @@ class BarcodeScannerApp extends Component {
     return sendCode = false;
   }
   _renderCamera(){
+
     return(
         <View style={styles.container}>
           <Camera
@@ -92,20 +103,21 @@ class BarcodeScannerApp extends Component {
             viewFinderWidth={this.state.viewFinderWidth}>
 
             <View style={styles.statusBar}>
-              <TouchableHighlight style={styles.button}
+              <TouchableHighlight
                 underlayColor='transparent'
                 onLongPress={this.barcodeReceived.bind(this)}
                 onPressOut={this._sendCodeOut.bind(this)}>
                   <Image source={require('./../img/SnapButton.png')}/>
               </TouchableHighlight>
             </View>
-
           </Camera>
-
+          <Modal/>
         </View>
 
     );
   }
+
+
 
   render() {
     return (
@@ -115,8 +127,46 @@ class BarcodeScannerApp extends Component {
 }
 
 const styles = StyleSheet.create({
+  iButton: {
+    flexDirection:'row',
+    position:'relative',
+    alignItems: 'center',
+    justifyContent: 'flex-end'
+  },
   container: {
     flex: 1,
+
+  },
+  innerContainer: {
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: windowHeight * .4
+  },
+  row: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+    marginBottom: 20,
+  },
+  rowTitle: {
+    flex: 1,
+    fontWeight: 'bold',
+  },
+  button: {
+    borderRadius: 5,
+    flex: 1,
+    height: 44,
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+  //  overflow: 'hidden',
+  },
+  buttonText: {
+    fontSize: 18,
+    margin: 5,
+    textAlign: 'center',
+  },
+  modalButton: {
+    marginTop: 10,
   },
   statusBar: {
     position:'relative',
@@ -126,10 +176,6 @@ const styles = StyleSheet.create({
     marginTop: windowHeight * .7
 
   },
-  statusBarText: {
-    fontSize: 20,
-  },
-
   });
 
 export default BarcodeScannerApp
