@@ -10,22 +10,27 @@ class ModalFB extends Component{
   constructor(props){
     super(props);
     this.state={
-      modalVisible: false,
-      transparent:true
-    }
+      modalVisible: undefined,
+      transparent:true,
+    };
+    this._setModalVisible = this._setModalVisible.bind(this);
+    this._validarLogin = this._validarLogin.bind(this);
   }
-
-  _validarLogin(){
-    let isDone  = realm.objects('User').filtered('done = true');
-    if(isDone.length == 0){
-      this._setModalVisible(true);
-    }else{
-      this._setModalVisible(false);
-    }
+  propTypes:{
+    source: React.propTypes.bool;
   }
 
   _setModalVisible(visible){
       this.setState({modalVisible: visible});
+   }
+
+  _validarLogin(){
+       let isDone  = realm.objects('User').filtered('done = true');
+       if(isDone.length == 0){
+         this._setModalVisible(true);
+       }else{
+         this._setModalVisible(false);
+       }
    }
 
    componentWillMount(){
@@ -43,23 +48,28 @@ class ModalFB extends Component{
       backgroundColor: '#ddd'
     };
     return(
+
       <Modal
         animationType='slide'
         transparent={this.state.transparent}
         visible={this.state.modalVisible}
-        onRequestClose={() => {this._setModalVisible(false)}}
+
         >
         <View style={[styles.container, modalBackgroundStyle]}>
           <Image source={require('./../img/gym-wallpaper.jpg')} style={{width:windowWidth, height:windowHeight}}>
           <View style={[styles.innerContainer, innerContainerTransparentStyle]}>
             <Login onPressFB={this._setModalVisible.bind(this)}/>
-              
           </View>
         </Image>
         </View>
       </Modal>
     );
   }
+
+  componentWillReceiveProps(modalVisible){
+    this._setModalVisible(this.props.source);
+  }
+  
 }
 
 const styles = StyleSheet.create({

@@ -20,6 +20,7 @@ let windowHeight = Dimensions.get('window').height;
 let windowWidth = Dimensions.get('window').width;
 var qrString = '';
 var sendCode = false;
+var isLogged = false;
 
 class BarcodeScannerApp extends Component {
 
@@ -38,30 +39,11 @@ class BarcodeScannerApp extends Component {
       },
       barcode:''
     };
-    //this.setModal = this.setModal.bind(this);
   }
 
-  setModal(visible){
-    this._showModal.setNativeProps({modalVisible:visible})
+  propTypes:{
+    source : React.propTypes.bool
   }
-
-
-
-  //_closeModal(){
-  //  this.props.navigator.pop(); //REVISAR BIEN ACá
-  //  qrString = '';
-  //}
-
-  //_gotoFBbutton(){
-  //  realm.write(()=>{
-  //    realm.create('User',{
-  //      id: 1,
-  //      done: false
-  //    }, true);
-  //  });
-
-  //  this.props.navigator.pop();
-  //}
 
   barcodeReceived() {
   //  if (e.data !== qrString && e.type == this.state.camera.barCodeType && sendCode )
@@ -87,8 +69,10 @@ class BarcodeScannerApp extends Component {
   _sendCodeOut(){
     return sendCode = false;
   }
-  _renderCamera(){
 
+
+
+  _renderCamera(){
     return(
         <View style={styles.container}>
           <Camera
@@ -111,13 +95,11 @@ class BarcodeScannerApp extends Component {
               </TouchableHighlight>
             </View>
           </Camera>
-          <Modal/>
+          <Modal source={this.props.source}/>
         </View>
 
     );
   }
-
-
 
   render() {
     return (

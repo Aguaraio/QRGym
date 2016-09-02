@@ -6,49 +6,40 @@ import UserProfile from './UserProfile';
 import realm from './../Realm/User';
 import Login from  './../Login';
 import Modal from './Modal';
+var showModal = false;
 class TabBar extends Component{
   constructor(props){
     super(props);
-
+    this.state = {
+      selectedTab: 'barcodeTab'
+    };
+    this._selectProfile = this._selectProfile.bind(this);
+    this._selectBarcode = this._selectBarcode.bind(this);
+    this._selectViewImage = this._selectViewImage.bind(this);
+    this._setShowModal = this._setShowModal.bind(this);
   }
-  state = {
-    selectedTab: 'barcodeTab'
-  };
-
-  //_gotoFBbutton(){
-  //  realm.write(()=>{
-  //    realm.create('User',{
-  //      id: 1,
-  //      done: false
-  //    }, true);
-  //  });
-  //  super.props.navigator.pop();
-  //}
-
-  //_getUser(){
-  //  result = realm.objects('FBUser').filtered('id=1');
-  //  value = result[0].picture;
-
-    //console.log(result[0].picture);
-  //}
 
   _selectProfile(){
     this.setState({
       selectedTab: 'profileTab',
     });
   }
+
   _selectBarcode(){
     this.setState({
       selectedTab: 'barcodeTab',
     });
   }
+
+  _setShowModal(){
+    showModal = true;
+  }
+
   _selectViewImage(){
     this.setState({
       selectedTab: 'viewTab',
     });
   }
-
-
 
   render(){
     return (
@@ -61,10 +52,10 @@ class TabBar extends Component{
                   icon={{url:''}}
                   title="Profile"
                   selected={this.state.selectedTab === 'profileTab'}
-                  onPress={() => {this._selectProfile(); }}>
+                  onPress={this._selectProfile}>
                   <View>
                     <UserProfile/>
-                    <Login fbButton={this._selectBarcode.bind(this)} />
+                    <Login fbButton={this._selectBarcode} showModal={this._setShowModal}/>
                   </View>
                 </TabBarIOS.Item>
 
@@ -72,15 +63,15 @@ class TabBar extends Component{
                   icon={{url:''}}
                   title="Barcode"
                   selected={this.state.selectedTab === 'barcodeTab'}
-                  onPress={() => {this._selectBarcode();}}>
-                  <BarcodeScannerIOS/>
+                  onPress={this._selectBarcode}>
+                  <BarcodeScannerIOS source={this.showModal}/>
                 </TabBarIOS.Item>
 
                 <TabBarIOS.Item
                   icon={{url:''}}
                   title="ViewImage"
                   selected={this.state.selectedTab === 'viewTab'}
-                  onPress={() => {this._selectViewImage();}}>
+                  onPress={this._selectViewImage}>
                   <ViewImage/>
                 </TabBarIOS.Item>
 

@@ -2,13 +2,10 @@ import React, {Component} from 'react';
 import {
   AppRegistry,
   StyleSheet,
-  Text,
-  View,
-  Navigator
+  View
 } from 'react-native';
 import BarcodeScannerIOS from './App/BarcodeScannerIOS';
 import realm from './Realm/User';
-const Realm = require('realm');
 const FBSDK = require('react-native-fbsdk');
 const {
   LoginButton,
@@ -27,32 +24,15 @@ var userPicture = '';
 class Login extends Component{
   constructor(props){
     super(props);
+    this._UserIN = this._UserIN.bind(this);
+    this._UserOUT = this._UserOUT.bind(this);
+    this._saveUserFB = this._saveUserFB.bind(this);
+    this.initUser = this.initUser.bind(this);
+    this._renderLogin = this._renderLogin.bind(this);
   }
   propTypes:{
-    passDone: React.propTypes.string,
-    onPressFB: React.propTypes.func,
-    fbButton: React.propTypes.func
+    showModal : React.propTypes.func
   }
-
-  
-
-
-  //_MoveModal(){
-
-  //  this.props.navigator.resetTo({
-  //        name: 'Login',
-
-    //})
-  //};
-
-
-
-  //_MoveModalParent(){
-
-    //super.props.navigator.resetTo({
-    //      name: 'Login',
-    //})
-  //};
 
   _UserIN(){
     realm.write(()=>{
@@ -70,7 +50,6 @@ class Login extends Component{
         done: false
       }, true);
     });
-
   }
 
 _saveUserFB(iduser, name, gender, email, birthday, picture){
@@ -109,7 +88,7 @@ initUser(token) {
               try {
                 if (result.grantedPermissions) {
 
-                    this._UserIN();
+                    this._UserIN;
 
                     AccessToken.getCurrentAccessToken().then(
                       (data) => {
@@ -118,11 +97,7 @@ initUser(token) {
                       }
                     );
 
-                    console.log('estoy arriba de onpressfb');
-
                     this.props.onPressFB(false);
-
-                    console.log('estoy debajo de onpressfb');
 
                 } else if (result.isCancelled){
                   alert("Login was cancelled");
@@ -136,17 +111,11 @@ initUser(token) {
 
           onLogoutFinished={() => {
 
-              alert("User logged out");
-              this._UserOUT();
-
-              console.log('arriba gotobarcode');
+              this._UserOUT;
 
               this.props.fbButton();
+              this.props.showModal();
 
-              //this.props.onPressFB(true);
-            //  {ref={BarcodeScannerIOS => this.setModal(true) = BarcodeScannerIOS}};
-
-              console.log('abajo gotobarcode');
             }
           }/>
         </View>
@@ -160,6 +129,9 @@ initUser(token) {
 
   );
   }
+
+
+
 };
 const styles = StyleSheet.create({
   Button: {
