@@ -20,18 +20,14 @@ var userGender;
 var userEmail;
 var userBirthday;
 var userPicture = '';
-
 class Login extends Component{
   constructor(props){
     super(props);
-    this._UserIN = this._UserIN.bind(this);
-    this._UserOUT = this._UserOUT.bind(this);
-    this._saveUserFB = this._saveUserFB.bind(this);
-    this.initUser = this.initUser.bind(this);
-    this._renderLogin = this._renderLogin.bind(this);
+
   }
   propTypes:{
-    showModal : React.propTypes.func
+    showModal : React.propTypes.func,
+    //setProfile : React.propTypes.func
   }
 
   _UserIN(){
@@ -63,7 +59,8 @@ _saveUserFB(iduser, name, gender, email, birthday, picture){
       email: email,
       birthday: birthday
     }, true);
-  })
+  });
+  //userPicture = picture;
 }
 
 initUser(token) {
@@ -88,7 +85,7 @@ initUser(token) {
               try {
                 if (result.grantedPermissions) {
 
-                    this._UserIN;
+                    this._UserIN();
 
                     AccessToken.getCurrentAccessToken().then(
                       (data) => {
@@ -96,6 +93,8 @@ initUser(token) {
                         this.initUser(accessToken)
                       }
                     );
+
+                    //this.props.setProfile();
 
                     this.props.onPressFB(false);
 
@@ -111,7 +110,7 @@ initUser(token) {
 
           onLogoutFinished={() => {
 
-              this._UserOUT;
+              this._UserOUT();
 
               this.props.fbButton();
               this.props.showModal();
@@ -120,7 +119,7 @@ initUser(token) {
           }/>
         </View>
       );
-      this._saveUserFB(userId, userName);
+    //  this._saveUserFB(userId, userName);
   }
 
   render() {

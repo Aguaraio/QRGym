@@ -70,8 +70,6 @@ class BarcodeScannerApp extends Component {
     return sendCode = false;
   }
 
-
-
   _renderCamera(){
     return(
         <View style={styles.container}>

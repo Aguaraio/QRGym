@@ -10,12 +10,13 @@ class ModalFB extends Component{
   constructor(props){
     super(props);
     this.state={
-      modalVisible: undefined,
+      modalVisible: false,
       transparent:true,
     };
     this._setModalVisible = this._setModalVisible.bind(this);
     this._validarLogin = this._validarLogin.bind(this);
   }
+
   propTypes:{
     source: React.propTypes.bool;
   }
@@ -67,9 +68,11 @@ class ModalFB extends Component{
   }
 
   componentWillReceiveProps(modalVisible){
-    this._setModalVisible(this.props.source);
-  }
-  
+    this._validarLogin();
+    //this._setModalVisible(modalVisible);
+  };
+
+
 }
 
 const styles = StyleSheet.create({
